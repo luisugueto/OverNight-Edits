@@ -12,21 +12,27 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	if(Auth::user()){
+		$process = App\Imagenes::all()->where('status', 'process')->where('id_user', Auth::user()->id);
+		$no_process = App\Imagenes::all()->where('status', 'no_process')->where('id_user', Auth::user()->id);
+	}
+	else{
+		$process = App\Imagenes::all()->where('status', 'process');
+		$no_process = App\Imagenes::all()->where('status', 'no_process');	
+	}
+
+    return view('welcome', compact('process', 'no_process'));
 });
 
-Route::get('/cart', function () {
-    return view('panel.upload');
-});
-Route::get('/images', function () {
-    return view('panel.images');
-});
-Route::get('/upload', function () {
-    return view('panel.upload');
-});
-Route::get('/plan', function () {
-    return view('panel.plan');
-});
+Route::get('/download/{file}', array(
+	'as' => 'upload',
+	'uses' => 'ImagesController@downloadFile',
+));
+
+Route::post('/upload', array(
+	'as' => 'upload',
+	'uses' => 'PedidosController@noMember',
+));
 
 Route::post('/upload-images', 'ImagesController@store');
 Route::post('/login', 'LoginController@store');
@@ -34,6 +40,19 @@ Route::get('/logout', 'LoginController@destroy');
 
 Route::get('/register', 'UserController@store');
 
-
+Route::resource('user', 'UserController');
 Route::resource('images', 'ImagesController');
 Route::resource('login', 'LoginController');
+Route::resource('pedido', 'PedidosController');
+
+// Paypal
+// Enviamos nuestro pedido a PayPal
+Route::get('payment', array(
+	'as' => 'payment',
+	'uses' => 'PedidosController@postPayment',
+));
+// Después de realizar el pago Paypal redirecciona a esta ruta
+Route::get('payment/status', array(
+	'as' => 'payment.status',
+	'uses' => 'PedidosController@getPaymentStatus',
+));

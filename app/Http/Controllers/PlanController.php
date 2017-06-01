@@ -5,14 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Requests\UserRequest;
-use Auth;
-use Redirect;
-use Session;
-use App\User;
-use App\Plan;
 
-class UserController extends Controller
+class PlanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -40,30 +34,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
-
-        if($request->password == $request->rePassword)
-        {
-            $user = new User;
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
-            $user->rol_id = 2;
-            $user->remember_token = Session::token();
-            $user->save();
-
-            $plan = new Plan;
-            $plan->name = 'non-member';
-            $plan->id_user = $user->id;
-            $plan->save();
-
-            Session::flash('user-registered', true);
-            return Redirect::to('/');
-        }
-        else{
-            return Redirect::to('/');
-        }
+        //
     }
 
     /**

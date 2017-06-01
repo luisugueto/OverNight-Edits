@@ -49,10 +49,9 @@
                 <div class="col-sm-12 text-right" style="padding: 10px 50px 20px;">
                     @if(!Auth::user())
                     <a href="#" data-ref="view-register">SIGN UP</a> <span style="color: rgba(247,148,29,1);"> | </span>
-                    
-
-                    <a href="#" data-ref="view-signin">SIGN IN</a> <span style="color: rgba(247,148,29,1);"> |
-                    </span> 
+            
+                    <a href="#" data-ref="view-signin">SIGN IN</a>
+              
                     @endif
                     @if (Auth::user())
                     	<a href="#" data-ref="view-panel" id="user-panel">USER PANEL</a>
@@ -115,6 +114,15 @@
 			</script>
 		@endif
 
+		@if(Session::get('message') )
+			<div class="alert alert-success alert-dismissible" role="alert">
+		  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		  		<ul>
+		  			{{ Session::get('message') }}
+		  		</ul>
+		  	</div>
+		@endif
+
         <div id="view-1" class="view">
             <div class="banner" id="homebg">
                 
@@ -160,27 +168,35 @@
                             Fast 24 Hour Turn-Around
                         </small>
                     </h1>
-					<form action="/upload-images" method="post" class="dropzone needsclick dz-clickable dz-started" id="demo-upload">
-						{{ csrf_field() }}
+
+
+                    {!! Form::open(['route' => 'upload', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
 	                    <!-- <div id="dropp"> -->
-	                        <div class="dropp-ftext" onclick="$('#demo-upload').click();">
-	                            <strong class="gtext" style="font-size: 26px;">
-	                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
-	                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
-	                                your images here!
-	                                </strong>
-	                            <br>
-	                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
-	                        </div>
+	    					<input type="file" name="foto[]">
+	    						<div id="lara-form"></div>
+		                        <div class="dropp-ftext" onclick="$('#demo-upload').click();">
+		                            <strong class="gtext" style="font-size: 26px;">
+		                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
+		                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
+		                                your images here!
+		                                </strong>
+		                            <br>
+		                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
+		                        </div>
+	                        
+								<br>
+	                        	<label>Description: </label><input type="text" name="description">
+	                        	<label>Email: </label><input type="email" name="email" placeholder="Please insert your email">
+	                        
 	                    <!-- </div> -->
-					</form>
+					{!! Form::close() !!}
 
 					<div class="row">
                         <div class="col-md-12 text-center">
                             <button onclick="$('#demo-upload').submit()" class="btn-appointment">SUBMIT</button>
                         </div>
                     </div>
-
+                    <br>
 
                 </section>
             </div>
@@ -386,9 +402,6 @@
 
             </div>
 
-
-
-
             <div class="modal fade" id="zoomimgs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog" style="background: url() no-repeat 0 0 / cover;">
                 <div class="modal-content" style="">
@@ -405,7 +418,6 @@
         <div id="view-how" class="view">
 
             <div class="banner" id="howbg"></div>
-
 
             <section class="spacing">
                 <div class="container">
@@ -437,9 +449,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-    
-                
+                </div>                
             </section>
 
             <section class="spacing gbg">
@@ -557,8 +567,7 @@
             <section class="spacing text-center">
                 <h1>REGISTER</h1>
 
-                <form action="/register" method="get">
-                	{{ csrf_field() }}
+				{!! Form::open(['route'=> 'user.store', 'method' => 'POST']) !!}
                     <div class="container spacing">
                         <div class="row" style="padding: 20px 0;">
                             <div class="col-sm-6 col-sm-offset-3">
@@ -608,7 +617,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                {{ Form::close() }}
             </section>
         </div>
 
@@ -656,31 +665,129 @@
 	            <section>
 	                <div class="row panel">
 	                    <div class="col-md-3 text-center left-side">
-	                        <a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">
-	                            <button class="btn-appointment">UPLOAD</button>
-	                        </a>
-	                        <a href="#images" aria-controls="images" role="tab" data-toggle="tab">
-	                            <button class="btn-appointment">MY IMAGES</button>
-	                        </a>
-	                        <a href="#cart" aria-controls="cart" role="tab" data-toggle="tab">
-	                            <button class="btn-appointment">CART</button>
-	                        </a>
-	                        <a href="#plan" aria-controls="plan" role="tab" data-toggle="tab">
-	                            <button class="btn-appointment">MY PLAN</button>
+	                        @if(Auth::user()->rol_id == 2)
+		                        <a href="#upload" aria-controls="upload" role="tab" data-toggle="tab">
+		                            <button class="btn-appointment">UPLOAD</button>
+		                        </a>
+		                        <a href="#images" aria-controls="images" role="tab" data-toggle="tab">
+		                            <button class="btn-appointment">MY IMAGES</button>
+		                        </a>
+		                        <a href="#cart" aria-controls="cart" role="tab" data-toggle="tab">
+		                            <button class="btn-appointment">CART</button>
+		                        </a>
+		                        <a href="#plan" aria-controls="plan" role="tab" data-toggle="tab">
+		                            <button class="btn-appointment">MY PLAN</button>
+		                        </a>
+							@elseif(Auth::user()->rol_id == 1)
+								<a href="#imagenesTotal" aria-controls="imagenesTotal" role="tab" data-toggle="tab">
+		                            <button class="btn-appointment">IMAGES</button>
+		                        </a>
+		                    @endif
+	                        <a href="{{ url('/logout') }}">
+	                            <button class="btn-appointment">LOGOUT</button>
 	                        </a>
 	                    </div>
 	                    <div class="col-md-9 right-side tab-content">
-	                        <div role="tabpanel" class="tab-pane fade in active" id="upload">
-	                            <div class="spacing">
+	                    	@if(Auth::user()->rol_id == 2)
+	                        	<div role="tabpanel" class="tab-pane fade in active" id="upload">
+	                        @else
+	                        	<div role="tabpanel" class="tab-pane fade in" id="upload">
+	                        @endif
+	                            <!-- <div class="spacing">
 	                                <img src="img/icon1.jpg" style="width: 15%; margin: auto;" class="img-responsive">
 	                                <h2>Drop your images here!</h2>
-	                            </div>
+	                            </div> -->
+								<div class="spacing" style="margin-top: 10px">
+		                            {!! Form::open(['url'=> '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload3' , 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
+					                    <!-- <div id="dropp"> -->
+					                    	<input type="file" name="foto[]">
+					                        <div class="dropp-ftext" onclick="$('#demo-upload3').click();">
+					                            <strong class="gtext" style="font-size: 26px;">
+					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
+					                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
+					                                your images here!
+					                                </strong>
+					                            <br>
+					                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
+					                        </div>
+					                    <!-- </div> -->
+									{!! Form::close() !!}
+									<div class="row">
+				                        <div class="col-md-12 text-center">
+				                            <button onclick="$('#demo-upload3').submit()" class="btn-appointment">SUBMIT</button>
+				                        </div>
+				                    </div>
+				                    <br>
+								</div>
+
 	                        </div>
+							@if(Auth::user()->rol_id == 1)
+	                        <div role="tabpanel" class="tab-pane fade in active" id="imagenesTotal">
+	                            <!-- <div class="spacing">
+	                                <img src="img/icon1.jpg" style="width: 15%; margin: auto;" class="img-responsive">
+	                                <h2>Drop your images here!</h2>
+	                            </div> -->
+								<div class="spacing" style="margin-top: 10px">
+									@if(isset($process))
+										@foreach($process as $value)
+	                                		<div class="col-md-12">
+		                                        <div class="col-md-7">
+		                                            <img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px">
+		                                        </div>
+		                                        <div class="col-md-5" style="padding-top: 40px">
+		                                            <strong>Email: {{ $value->user->email }}<br>
+		                                            Description: </strong><br>
+		                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button><br>
+		                                            <button type="button" class="btn btn-info btn-lg" id="myModal">Change Status</button>
+		                                        </div>
+		                                    </div>
+	                                	@endforeach
+	                                @endif
+		                         </div>
+		                         
+								
+	                        </div>
+								
+							<!-- Trigger the modal with a button -->
+								
+
+								<!-- Modal -->
+	                        <div id="myModal" class="modal fade" role="dialog">
+								  <div class="modal-dialog">
+
+								    <!-- Modal content-->
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <button type="button" class="close" data-dismiss="modal">&times;</button>
+								        <h4 class="modal-title">Modal Header</h4>
+								      </div>
+								      <div class="modal-body">
+								        <p>Change Status.</p>
+								      </div>
+								      <div class="modal-footer">
+								      <form action="/changeStatus" method="POST">
+								      		<input type="hidden" name="idChange">
+									        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									        <button type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+								      </form>
+								      </div>
+								    </div>
+
+								  </div>
+								</div>
+
+	                        @endif
 
 	                        <div role="tabpanel" class="tab-pane fade in" id="images">
 
 	                            <div class="row">
-	                                <div class="col-sm-4">
+	                            	@foreach($process as $key => $value)
+                                		<div class="col-sm-4">
+		                                    <img src="{{ asset('pedidos/'.$value->name)}}" style="width: 100%; height: auto; padding: 20px;" alt="">
+		                                    <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+		                                </div>
+                                	@endforeach
+	                                <!-- <div class="col-sm-4">
 	                                    <img src="img/serv1.jpg" style="width: 100%; height: auto; padding: 20px;" alt="">
 
 	                                    <img src="img/serv1.jpg" style="width: 100%; height: auto; padding: 20px;" alt="">
@@ -697,78 +804,96 @@
 
 	                                    <img src="img/serv1.jpg" style="width: 100%; height: auto; padding: 20px;" alt="">
 	                                    <img src="img/serv1.jpg" style="width: 100%; height: auto; padding: 20px;" alt="">
-	                                </div>
-	                                <div class="col-sm-12 text-center">
+	                                </div> -->
+	                                <!-- <div class="col-sm-12 text-center">
 	                                    <br>
 	                                    <br>
 	                                    <button class="btn-appointment">DOWNLOAD</button>
 	                                    <br>
 	                                    <br>
 	                                    <br>
-	                                </div>
+	                                </div> -->
 	                            </div>
 
 	                        </div>
 
 	                        <div role="tabpanel" class="tab-pane fade in" id="cart">
-	                            <div class="row spacing">
-	                                <div class="col-md-6">
-	                                    <div class="col-md-12">
-	                                        <div class="col-md-7">
-	                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
-	                                        </div>
-	                                        <div class="col-md-5" style="padding-top: 40px">
-	                                            <strong>Image 1 <br>11$</strong>
-	                                        </div>
-	                                    </div>
-	                                    <div class="col-md-12">
-	                                        <div class="col-md-7">
-	                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
-	                                        </div>
-	                                        <div class="col-md-5" style="padding-top: 40px">
-	                                            <strong>Image 1 <br>11$</strong>
-	                                        </div>
-	                                    </div>
-	                                    <div class="col-md-12">
-	                                        <div class="col-md-7">
-	                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
-	                                        </div>
-	                                        <div class="col-md-5" style="padding-top: 40px">
-	                                            <strong>Image 1 <br>11$</strong>
-	                                        </div>
-	                                    </div>
+		                        <div class="row spacing">
+		                                <div class="col-md-6">
+		                                
+		                                	@foreach($no_process as $key => $value)
+		                                		<div class="col-md-12">
+			                                        <div class="col-md-7">
+			                                            <img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px">
+			                                        </div>
+			                                        <div class="col-md-5" style="padding-top: 40px">
+			                                            <strong>Image {{ $key+1 }}<br>10$</strong>
+			                                        </div>
+			                                    </div>
+		                                	@endforeach
+		                              
+		                                    <!-- <div class="col-md-12">
+		                                        <div class="col-md-7">
+		                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
+		                                            <input type="file" name="foto">
+		                                        </div>
+		                                        <div class="col-md-5" style="padding-top: 40px">
+		                                            <strong>Image 1 <br>11$</strong>
+		                                        </div>
+		                                    </div>
+		                                    <div class="col-md-12">
+		                                        <div class="col-md-7">
+		                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
+		                                        </div>
+		                                        <div class="col-md-5" style="padding-top: 40px">
+		                                            <strong>Image 1 <br>11$</strong>
+		                                        </div>
+		                                    </div>
+		                                    <div class="col-md-12">
+		                                        <div class="col-md-7">
+		                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
+		                                        </div>
+		                                        <div class="col-md-5" style="padding-top: 40px">
+		                                            <strong>Image 1 <br>11$</strong>
+		                                        </div>
+		                                    </div>
 
-	                                </div>
-	                                <div class="col-md-6">
-	                                    <div class="col-md-12">
-	                                        <div class="col-md-7">
-	                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
-	                                        </div>
-	                                        <div class="col-md-5" style="padding-top: 40px">
-	                                            <strong>Image 1 <br>11$</strong>
-	                                        </div>
-	                                    </div>
-	                                    <div class="col-md-12">
-	                                        <div class="col-md-7">
-	                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
-	                                        </div>
-	                                        <div class="col-md-5" style="padding-top: 40px">
-	                                            <strong>Image 1 <br>11$</strong>
-	                                        </div>
-	                                    </div>
+		                                </div>
+		                                <div class="col-md-6">
+		                                    <div class="col-md-12">
+		                                        <div class="col-md-7">
+		                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
+		                                        </div>
+		                                        <div class="col-md-5" style="padding-top: 40px">
+		                                            <strong>Image 1 <br>11$</strong>
+		                                        </div>
+		                                    </div>
+		                                    <div class="col-md-12">
+		                                        <div class="col-md-7">
+		                                            <img src="img/serv1.jpg" alt="" class="img-responsive" style="padding: 20px">
+		                                        </div>
+		                                        <div class="col-md-5" style="padding-top: 40px">
+		                                            <strong>Image 1 <br>11$</strong>
+		                                        </div>
+		                                    </div>
 
-	                                </div>
-
-	                                <div class="col-sm-12">
-	                                    <div class="col-md-6 text-center">
-	                                        <div class="h4"><strong>TOTAL: 55$</strong></div>
-	                                    </div>
-	                                    <div class="col-md-6 text-center">
-	                                        <button class="btn-appointment">CHECKOUT</button>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                        </div>
+		                                </div> -->
+										<div class="col-sm-12">
+											<div class="col-md-6 text-center">
+		                                        <label>Description: </label>
+		                                        <textarea name="description" cols="30" rows="3"></textarea>
+		                                    </div>
+										</div>
+		                                <div class="col-sm-12">
+		                                    <div class="col-md-6 text-center">
+		                                        <div class="h4"><strong>TOTAL: {{ 10 * count($no_process) }}$</strong></div>
+		                                    </div>
+		                                    <div class="col-md-6 text-center">
+		                                        <button class="btn-appointment"><a href="{{ route('payment') }}" style="color:white;">CHECKOUT</a></button>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </div>
 
 	                        <div role="tabpanel" class="tab-pane fade in" id="plan">
 	                        </div>
@@ -870,21 +995,34 @@
                             Fast 24 Hour Turn-Around
                         </small>
                     </h1>
-                    <form action="/upload" class="dropzone needsclick dz-clickable dz-started" id="demo-upload2">
-                        <!-- <div id="dropp"> -->
-                            <div class="dropp-ftext" onclick="$('#demo-upload2').click();">
-                                <strong class="gtext" style="font-size: 26px;">
-                                    <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
-                                    <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
-                                    your image here!
-                                    </strong>
-                                <br>
-                                <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
-                            </div>
-                            
-                        <!-- </div> -->
-                    
-                     </form>
+                    {!! Form::open(['route' => 'upload', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload4', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
+	                    <!-- <div id="dropp"> -->
+	    					<!-- <input type="file" name="foto[]"> -->
+	    					
+		                        <div class="dropp-ftext" onclick="$('#demo-upload').click();">
+		                            <strong class="gtext" style="font-size: 26px;">
+		                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
+		                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
+		                                your images here!
+		                                </strong>
+		                            <br>
+		                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
+		                        </div>
+	                        
+								<br>
+	                        	<label>Description: </label><input type="text" name="description">
+	                        	<label>Email: </label><input type="email" name="email" placeholder="Please insert your email">
+	                        
+	                    <!-- </div> -->
+					{!! Form::close() !!}
+
+					<div class="row">
+                        <div class="col-md-12 text-center">
+                            <button onclick="$('#demo-upload4').submit()" class="btn-appointment">SUBMIT</button>
+                        </div>
+                    </div>
+                    <br>
+           
                 </section>
 
             </div>
@@ -954,6 +1092,14 @@
 	    <script>
 			$(document).ready(function(){
 				$('a#user-panel').click();
+			});
+	    </script>
+    @endif
+
+    @if(Session::get('img_save') == 1)
+    	<script>
+			$(document).ready(function(){
+				$('a#cart').click();
 			});
 	    </script>
     @endif
@@ -1295,6 +1441,18 @@
         }
 
 
+    </script>
+
+    <script>
+    	var myDropzone = new Dropzone('#demo-upload', {
+			hiddenInputContainer: '#lara-form'
+    	});
+
+    	$('button#myModal').click(function(){
+			$('div#myModal').modal('show');
+			$('div.modal-backdrop.fade.in').removeClass("modal-backdrop fade in");
+
+        });
     </script>
 
 
