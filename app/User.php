@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id','name', 'email', 'password', 'rol_id', 
+        'id','name', 'email', 'password', 'rol_id', 'plan_id', 
     ];
 
     /**
@@ -26,5 +26,9 @@ class User extends Authenticatable
 
     public function rol(){
         return $this->belongsTo('App\Rol', 'rol_id');
+    }
+
+    public function PlanUsuario(){
+        return $this->belongsTo('App\Plan', 'plan_id');
     }
 }

@@ -9,6 +9,7 @@ use App\Imagenes;
 use Redirect;
 use Session;
 use Carbon\Carbon;
+use App\ImagenEditada;
 use Auth;
 
 class ImagesController extends Controller
@@ -56,7 +57,7 @@ class ImagesController extends Controller
             $imagen->id_user = Auth::user()->id;
             $imagen->save();
         }
-        Session::flash('img_save', 1);
+        Session::flash('user-registered', true);
         return Redirect::to('/');
     }
 
@@ -109,5 +110,40 @@ class ImagesController extends Controller
         $pathtoFile = public_path().'/pedidos/'.$file;
 
         return response()->download($pathtoFile);
+    }
+
+    public function changeStatus(Request $request)
+    {
+        $imagenes = Imagenes::find($request->id);
+        $imagenes->status = 'editing';
+        $imagenes->save();
+
+        Session::flash('user-registered', true);
+        return Redirect::to('/')->with('message', 'Change Status "Editing" Correctly');
+    }
+
+    public function uploadNewImage(Request $request)
+    {
+        $files = $request->file('foto');
+        
+        foreach($files as $file){
+            $fileName = $file->getClientOriginalName();
+            
+            $name = Carbon::now()->second.$fileName;
+              
+            $imagenes = Imagenes::find($request->img);
+            $imagenes->send = 'yes';
+            $imagenes->save();
+
+            $imagen = new ImagenEditada;
+            $imagen->name = $name;
+            $imagen->id_imagen = $request->img;
+            $imagen->id_user = $imagenes->id_user;
+            $imagen->save();
+
+            \Storage::disk('user')->put($name, \File::get($file));
+        }
+        Session::flash('user-registered', true);
+        return Redirect::to('/')->with('message', 'Image Uploaded Correctly');;
     }
 }

@@ -26,5 +26,10 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('1234'),
             'rol_id' => 1
         ]);
+
+        DB::table('plans')->insert([
+            'name' => 'non-member',
+            'id_user' => 1
+        ]);
     }
 }

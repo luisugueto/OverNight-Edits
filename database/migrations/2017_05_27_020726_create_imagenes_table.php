@@ -15,7 +15,7 @@ class CreateImagenesTable extends Migration
         Schema::create('imagenes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->enum('status', ['no_process', 'process']);
+            $table->enum('status', ['no_process', 'process', 'editing']);
             $table->enum('send', ['no', 'yes'])->default('no');
             $table->integer('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('Cascade');

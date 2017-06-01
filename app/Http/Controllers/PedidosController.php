@@ -26,6 +26,7 @@ use App\Imagenes;
 use App\Plan;
 use Auth;
 use Redirect;
+use Mail;
 
 class PedidosController extends Controller
 {
@@ -114,8 +115,34 @@ class PedidosController extends Controller
         //
     }
 
-    public function postPayment()
+    public function postPayment(Request $request)
     {
+      //   $data = array('name'=>"Virat Gandhi");
+   
+      // Mail::send(['text'=>'mail'], $data, function($message) {
+      //    $message->to('blink242@outlook.com', 'Tutorials Point')->subject
+      //       ('Laravel Basic Testing Mail');
+      //    $message->from('ugueto.luis19@gmail.com','Luis Ugueto');
+      // });
+      // dd("Basic Email Sent. Check your inbox.");
+
+        // verify plan of the user
+        $plan = Plan::orderBy('id', 'desc')->where('id_user', Auth::user()->id)->take(1)->get();
+
+        foreach ($plan as $key => $value) 
+        {
+            if($value->name == 'standar')
+            {
+                $price = 10;
+            }
+            else
+            {
+                $price = 15;
+            }
+        }
+
+        $description = (!empty(\Request::get('description'))) ? \Session::put('description', \Request::get('description')) : 'Foto';
+
         // create new Payer
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
@@ -131,11 +158,11 @@ class PedidosController extends Controller
             $item = new Item();
             $item->setName($producto->name)
             ->setCurrency($currency)
-            ->setDescription('Foto')
+            ->setDescription($description)
             ->setQuantity(1)
-            ->setPrice(10);
+            ->setPrice($price);
             $items[] = $item;
-            $subtotal += 1 * 10;
+            $subtotal += 1 * $price;
         }
 
         // add items at ItemList
@@ -159,8 +186,8 @@ class PedidosController extends Controller
             ->setDescription('Pedido de Fotos');
 
         $redirect_urls = new RedirectUrls();
-        $redirect_urls->setReturnUrl(\URL::route('payment.status'))
-            ->setCancelUrl(\URL::route('payment.status'));
+        $redirect_urls->setReturnUrl(\URL::route('payment.statuss'))
+            ->setCancelUrl(\URL::route('payment.statuss'));
 
         // create new Payment
         $payment = new Payment();
@@ -204,6 +231,7 @@ class PedidosController extends Controller
         $token = \Request::get('token');
         //if (empty(\Request::get('PayerID')) || empty(\Request::get('token'))) {
         if (empty($payerId) || empty($token)) {
+            Session::flash('user-registered', true);
             return \Redirect::to('/')
                 ->with('message', 'Hubo un problema al intentar pagar con Paypal');
         }
@@ -248,8 +276,8 @@ class PedidosController extends Controller
             // Enviar correo a admin
             // Redireccionar
             $this->saveOrder(\Session::get('cart'));
-            dd(\Session::get('cart'));
             \Session::forget('cart');
+            Session::flash('user-registered', true);
             return \Redirect::to('/')->with('message', 'Payment Registred');
         }
         return \Redirect::to('/')->with('message', 'Error!');
@@ -289,9 +317,6 @@ class PedidosController extends Controller
                 'created', new \DateTime(),
                 'id_user' => $user->id
             ]);
-
-            // get cart in the Session
-            $cart = Session::get('cart');
 
             foreach($cart as $file){
                 $fileName = $file->getClientOriginalName();
@@ -347,17 +372,17 @@ class PedidosController extends Controller
     public function noMember(Request $request)
     {
         // push data in the Session
-        Session::put('cart', $request->foto);
-        Session::put('email', $request->email);
-        Session::put('description', $request->description);
-        Session::flash('newMember', 1);
+        \Session::put('cart', $request->foto);
+        \Session::put('email', $request->email);
+        \Session::put('description', $request->description);
+        \Session::put('newMember', 1);
 
         // create new PAyer
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
         $items = array();
         $subtotal = 0;
-        $cart = Session::get('cart');
+        $cart = \Session::get('cart');
         $currency = 'USD';
 
         foreach($cart as $producto){
@@ -365,7 +390,7 @@ class PedidosController extends Controller
             $item = new Item();
             $item->setName($fileName)
             ->setCurrency($currency)
-            ->setDescription(Session::get('description'))
+            ->setDescription(\Session::get('description'))
             ->setQuantity(1)
             ->setPrice(15);
             $items[] = $item;
@@ -389,11 +414,11 @@ class PedidosController extends Controller
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
-            ->setDescription('Pedido de prueba en mi Laravel App Store');
+            ->setDescription('Pedido de Fotos');
 
         $redirect_urls = new RedirectUrls();
-        $redirect_urls->setReturnUrl(\URL::route('payment.status'))
-            ->setCancelUrl(\URL::route('payment.status'));
+        $redirect_urls->setReturnUrl(\URL::route('payment.statuss'))
+            ->setCancelUrl(\URL::route('payment.statuss'));
 
         $payment = new Payment();
         $payment->setIntent('Sale')
@@ -421,8 +446,10 @@ class PedidosController extends Controller
         \Session::put('paypal_payment_id', $payment->getId());
         if(isset($redirect_url)) {
             // redirect to paypal
+            Session::flash('user-registered', true);
             return \Redirect::away($redirect_url);
         }
+        Session::flash('user-registered', true);
         return \Redirect::to('/');
     }
 }

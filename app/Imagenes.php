@@ -13,7 +13,7 @@ class Imagenes extends Model
      * @var array
      */
     protected $fillable = [
-        'id','name', 'status'
+        'id','name', 'status', 'id_user'
     ];
 
     public function user(){
@@ -22,5 +22,10 @@ class Imagenes extends Model
 
     public function pedido(){
         return $this->belongsTo('App\PedidoImagen', 'id');
+    }
+
+    public function imagenEditada()
+    {
+        return $this->hasOne('App\ImagenEditada');
     }
 }

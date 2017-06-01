@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePlansTable extends Migration
+class CreateImagenEditadasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,13 @@ class CreatePlansTable extends Migration
      */
     public function up()
     {
-        Schema::create('plans', function (Blueprint $table) {
+        Schema::create('imagen_editadas', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('name', ['standar', 'non-member']);
+            $table->string('name');
+            $table->integer('id_imagen')->unsigned();
+            $table->foreign('id_imagen')->references('id')->on('users')->onDelete('Cascade');
             $table->integer('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('users')->onDelete('Cascade');
-            $table->date('final')->default('0000-00-00');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreatePlansTable extends Migration
      */
     public function down()
     {
-        Schema::drop('plans');
+        Schema::drop('imagen_editadas');
     }
 }
