@@ -11,6 +11,7 @@ use Session;
 use Carbon\Carbon;
 use App\ImagenEditada;
 use Auth;
+use Storage;
 
 class ImagesController extends Controller
 {
@@ -110,6 +111,17 @@ class ImagesController extends Controller
         $pathtoFile = public_path().'/pedidos/'.$file;
 
         return response()->download($pathtoFile);
+    }
+
+    public function deletedFile($file, $id){
+        
+        Storage::delete($file);
+        
+        $imagenes = Imagenes::find($id);
+        $imagenes->delete();
+
+        Session::flash('panel', 1);
+        return Redirect::to('/')->with('message', 'Image Deleted Correctly');
     }
 
     public function changeStatus(Request $request)

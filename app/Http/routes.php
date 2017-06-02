@@ -54,6 +54,11 @@ Route::get('/download/{file}', array(
 	'uses' => 'ImagesController@downloadFile',
 ));
 
+Route::get('/delete/{file}/{id}', array(
+	'as' => 'delete',
+	'uses' => 'ImagesController@deletedFile',
+));
+
 Route::post('/upload', array(
 	'as' => 'upload',
 	'uses' => 'PedidosController@noMember',
