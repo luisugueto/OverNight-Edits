@@ -19,13 +19,4 @@ class Imagenes extends Model
     public function user(){
         return $this->belongsTo('App\User', 'id_user');
     }
-
-    public function pedido(){
-        return $this->belongsTo('App\PedidoImagen', 'id');
-    }
-
-    public function imagenEditada()
-    {
-        return $this->hasOne('App\ImagenEditada');
-    }
 }

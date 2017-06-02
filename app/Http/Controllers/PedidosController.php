@@ -117,8 +117,23 @@ class PedidosController extends Controller
 
     public function postPayment(Request $request)
     {
+
+        $img = Imagenes::all()->where('status', 'no_process')->where('id_user', Auth::user()->id);
+        $itemsCheck = array();
+        foreach ($img as $key => $value) {
+            $test = 'checked'.$value->id;
+            if($request->$test == 'on')
+            {
+                array_push($itemsCheck, ['id' => $value->id]);
+            }
+        }
+
+        // foreach ($request->checked as $value) {
+        //     dd($value);
+        // }
+
       //   $data = array('name'=>"Virat Gandhi");
-   
+
       // Mail::send(['text'=>'mail'], $data, function($message) {
       //    $message->to('blink242@outlook.com', 'Tutorials Point')->subject
       //       ('Laravel Basic Testing Mail');
@@ -127,20 +142,6 @@ class PedidosController extends Controller
       // dd("Basic Email Sent. Check your inbox.");
 
         // verify plan of the user
-        $plan = Plan::orderBy('id', 'desc')->where('id_user', Auth::user()->id)->take(1)->get();
-
-        foreach ($plan as $key => $value) 
-        {
-            if($value->name == 'standar')
-            {
-                $price = 10;
-            }
-            else
-            {
-                $price = 15;
-            }
-        }
-
         $description = (!empty(\Request::get('description'))) ? \Session::put('description', \Request::get('description')) : 'Foto';
 
         // create new Payer
@@ -152,9 +153,31 @@ class PedidosController extends Controller
         // get images of status (No Process) and User
         $cart = Imagenes::all()->where('status', 'no_process')->where('id_user', Auth::user()->id);
         \Session::put('cart', $cart);
+        \Session::put('itemsCheck', $itemsCheck);
         $currency = 'USD';
 
         foreach($cart as $producto){
+            $plan = Plan::orderBy('id', 'desc')->where('id_user', Auth::user()->id)->take(1)->get();
+
+            foreach ($plan as $key => $value)
+            {
+                if($value->name == 'standar')
+                {
+                    $price = 10;
+                    $extra = 15;
+                }
+                else
+                {
+                    $price = 15;
+                    $extra = 20;
+                }
+            }
+
+            if(in_array(['id'=> $producto->id],$itemsCheck))
+            {
+                $price+=$extra;
+            }
+
             $item = new Item();
             $item->setName($producto->name)
             ->setCurrency($currency)
@@ -231,11 +254,11 @@ class PedidosController extends Controller
         $token = \Request::get('token');
         //if (empty(\Request::get('PayerID')) || empty(\Request::get('token'))) {
         if (empty($payerId) || empty($token)) {
-            Session::flash('user-registered', true);
+            Session::flash('panel', 1);
             return \Redirect::to('/')
                 ->with('message', 'Hubo un problema al intentar pagar con Paypal');
         }
-        
+
         try {
             $payment = Payment::get($paymentId, $this->_api_context);
         } catch (Exception $ex) {
@@ -248,8 +271,8 @@ class PedidosController extends Controller
             }
         }
 
-        // PaymentExecution object includes information necessary 
-        // to execute a PayPal account payment. 
+        // PaymentExecution object includes information necessary
+        // to execute a PayPal account payment.
         // The payer_id is added to the request query parameters
         // when the user is redirected from paypal back to your site
         try {
@@ -266,30 +289,30 @@ class PedidosController extends Controller
                 die('Ups! Algo salió mal');
             }
         }
-        
+
         //echo '<pre>';print_r($result);echo '</pre>';exit; // DEBUG RESULT, remove it later
         if ($result->getState() == 'approved') { // payment made
             // Registrar el pedido --- ok
             // Registrar el Detalle del pedido  --- ok
-            // Eliminar carrito 
+            // Eliminar carrito
             // Enviar correo a user
             // Enviar correo a admin
             // Redireccionar
-            $this->saveOrder(\Session::get('cart'));
+            $this->saveOrder(\Session::get('cart'), \Session::get('itemsCheck'));
             \Session::forget('cart');
-            Session::flash('user-registered', true);
+            Session::flash('panel', 1);
             return \Redirect::to('/')->with('message', 'Payment Registred');
         }
         return \Redirect::to('/')->with('message', 'Error!');
     }
 
-    private function saveOrder($cart)
+    private function saveOrder($cart, $itemsCheck)
     {
         $total = 0;
         foreach($cart as $item){
             $total += 1 * 10;
         }
-        
+
         // get description in Session
         $description = Session::get('description');
 
@@ -309,7 +332,6 @@ class PedidosController extends Controller
             $plan->id_user = $user->id;
             $plan->save();
 
-
             // create new Order
             $order = Pedidos::create([
                 'price' => $total,
@@ -320,10 +342,10 @@ class PedidosController extends Controller
 
             foreach($cart as $file){
                 $fileName = $file->getClientOriginalName();
-                
+
                 $name = Carbon::now()->second.$fileName;
                 \Storage::disk('local')->put($name, \File::get($file));
-                
+
                 $imagen = new Imagenes;
                 $imagen->name = $name;
                 $imagen->status = 'process';
@@ -339,6 +361,7 @@ class PedidosController extends Controller
                 \Session::forget('newMember');
                 \Session::forget('description');
                 \Session::forget('email');
+                \Session::forget('itemsCheck');
             }
         }
         else{
@@ -356,11 +379,15 @@ class PedidosController extends Controller
 
                 $imagen = Imagenes::find($item->id);
                 $imagen->status = 'process'; // change status Img
+                if(in_array(['id'=> $item->id],$itemsCheck))
+                {
+                    $imagen->urgent = 'yes';
+                }
                 $imagen->save();
-            }  
+            }
         }
     }
-    
+
     private function saveOrderItem($item, $order_id)
     {
         PedidoImagen::create([
@@ -446,10 +473,10 @@ class PedidosController extends Controller
         \Session::put('paypal_payment_id', $payment->getId());
         if(isset($redirect_url)) {
             // redirect to paypal
-            Session::flash('user-registered', true);
+            Session::flash('panel', 1);
             return \Redirect::away($redirect_url);
         }
-        Session::flash('user-registered', true);
+        Session::flash('panel', 1);
         return \Redirect::to('/');
     }
 }

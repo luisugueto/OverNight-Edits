@@ -13,14 +13,16 @@
 
 Route::get('/', function () {
 	if(Auth::user()){
-		$process = App\Imagenes::orderBy('created_at', 'desc')->where('status', 'process')->where('id_user', Auth::user()->id)->get();
+		$process = App\Imagenes::orderBy('created_at', 'desc')->where('status','process')->get();
+		$processUser = App\Imagenes::orderBy('created_at', 'desc')->where('status','process')->where('id_user', Auth::user()->id)->get();
+		$urgent = App\Imagenes::orderBy('created_at', 'desc')->where('urgent', 'yes')->where('status', 'process')->get();
 		$no_process = App\Imagenes::orderBy('created_at', 'desc')->where('status', 'no_process')->where('id_user', Auth::user()->id)->get();
 		$plan = App\Plan::orderBy('id', 'desc')->where('id_user', Auth::user()->id)->take(1)->get();
 		$send = App\ImagenEditada::where('id_user', Auth::user()->id)->get();
-		
+
 		$sendTotal = App\ImagenEditada::all();
 
-		$editing = App\Imagenes::orderBy('created_at', 'desc')->where('status', 'editing')->where('id_user', Auth::user()->id)->where('send', 'no')->get();
+		$editing = App\Imagenes::orderBy('created_at', 'desc')->where('status', 'editing')->where('send', 'no')->get();
 		foreach ($plan as $key => $value) {
 			$fecha1=strtotime($value->final);
 			$fecha2=strtotime(date('Y-m-d'));
@@ -35,16 +37,16 @@ Route::get('/', function () {
 	        }
 		}
 
-    	return view('welcome', compact('process', 'no_process', 'plan', 'send', 'editing', 'sendTotal'));
+    	return view('welcome', compact('process', 'processUser','no_process', 'plan', 'send', 'editing', 'sendTotal', 'urgent'));
 	}
 	else{
 		$process = App\Imagenes::all()->where('status', 'process');
-		$no_process = App\Imagenes::all()->where('status', 'no_process');	
+		$no_process = App\Imagenes::all()->where('status', 'no_process');
 
 		return view('welcome', compact('process', 'no_process'));
 	}
 
-	
+
 });
 
 Route::get('/download/{file}', array(

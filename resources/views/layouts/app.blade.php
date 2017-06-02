@@ -1,6 +1,6 @@
  <!DOCTYPE html>
     <html lang="en">
-    
+
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,17 +10,17 @@
         <link href="css/custom.css" rel="stylesheet">
 
         <link rel='shortcut icon' type='image/ico' href='favicon.ico' />
-        <script src="js/jquery.min.js"></script> 
-
+        <script src="js/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
     </head>
 
     <body>
 
-        
+
         <div class="modal fade" id="employmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog" style="margin-top: 100px;">
             <div class="modal-content" style="padding: 20px 40px; border-radius: 0;">
-                <!-- <div class="modal-header">  
+                <!-- <div class="modal-header">
                     <p class="title" style="color: rgba(27, 22, 102, 1); font-size: 32px; display: inline-block !important; padding: 0 20px;"></p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="display: inline-block; color: rgba(27, 22, 102, 1);">
                         <i class="fa fa-times"></i>
@@ -39,7 +39,7 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-    <div id="prime">        
+    <div id="prime">
         <header>
             <div class="col-md-4 text-center">
                 <img src="img/logo.png" class="hidden-xs hidden-sm"  style="height: 120px; width: auto; margin-top: -10px;">
@@ -49,9 +49,9 @@
                 <div class="col-sm-12 text-right" style="padding: 10px 50px 20px;">
                     @if(!Auth::user())
                     <a href="#" data-ref="view-register">SIGN UP</a> <span style="color: rgba(247,148,29,1);"> | </span>
-            
+
                     <a href="#" data-ref="view-signin">SIGN IN</a>
-              
+
                     @endif
                     @if (Auth::user())
                     	<a href="#" data-ref="view-panel" id="user-panel">USER PANEL</a>
@@ -103,7 +103,7 @@
 		  		<ul>
 		  			@foreach($errors->all() as $error)
 		  				<li>{!! $error !!}</li>
-		  			@endforeach	
+		  			@endforeach
 		  		</ul>
 		  	</div>
 		@endif
@@ -125,7 +125,7 @@
 
         <div id="view-1" class="view">
             <div class="banner" id="homebg">
-                
+
             </div>
 
             <section class="spacing">
@@ -157,7 +157,7 @@
                     </div>
                 </div>
 
-                
+
             </section>
 
             <div class="bgsec spacing" id="drop">
@@ -171,29 +171,30 @@
 
 
                     @if(Auth::user())
-                    	{!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload3', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
+                    	{!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload2', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
 				                    <!-- <div id="dropp"> -->
 				    					<input type="file" name="foto[]">
-				    					
-					                        <div class="dropp-ftext" onclick="$('#demo-upload').click();">
+
+					                        <div class="dropp-ftext" onclick="$('#demo-upload2').click();">
 					                            <strong class="gtext" style="font-size: 26px;">
-					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
+					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span>
 					                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
 					                                your images here!
 					                                </strong>
 					                            <br>
 					                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
 					                        </div>
-				                        
+
 				                    <!-- </div> -->
 								{!! Form::close() !!}
-					                     
+
 									<div class="row">
 				                        <div class="col-md-12 text-center">
-				                            <button onclick="$('#demo-upload3').submit()" class="btn-appointment">SUBMIT</button>
+				                            <button onclick="$('#demo-upload2').submit()" class="btn-appointment">SUBMIT</button>
 				                        </div>
 				                    </div>
 					@else
+
 						<section class="white-gradient text-center">
 		                    <h1 class="bold" style="margin-bottom: 40px;">
 		                        Sign in to enjoy the service <br>
@@ -311,13 +312,13 @@
                 </div>
             </section>
 
-           
-            
+
+
         </div>
 
         <div id="view-pricing" class="view">
             <div class="banner" id="pricingbg"></div>
-            
+
             <section class="prices spacing">
                 <div class="container">
                     <div class="row">
@@ -453,7 +454,7 @@
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
             </section>
 
             <section class="spacing gbg">
@@ -665,7 +666,7 @@
 
         @if(Auth::user())
 	        <div id="view-panel" class="view">
-	             
+
 	            <section>
 	                <div class="row panel">
 	                    <div class="col-md-3 text-center left-side">
@@ -686,7 +687,10 @@
 		                            <button class="btn-appointment">MY PLAN</button>
 		                        </a>
 							@elseif(Auth::user()->rol_id == 1)
-								<a href="#imagenesTotal" aria-controls="imagenesTotal" role="tab" data-toggle="tab">
+                        <a href="#urgent" aria-controls="urgent" role="tab" data-toggle="tab">
+                              <button class="btn-appointment">IMAGES URGENT</button>
+                          </a>
+								          <a href="#imageesTotal" aria-controls="imageesTotal" role="tab" data-toggle="tab">
 		                            <button class="btn-appointment">UNEDIT IMAGES</button>
 		                        </a>
 		                        <a href="#editionImages" aria-controls="editionImages" role="tab" data-toggle="tab">
@@ -714,20 +718,20 @@
 								{!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload3', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
 				                    <!-- <div id="dropp"> -->
 				    					<input type="file" name="foto[]">
-				    					
-					                        <div class="dropp-ftext" onclick="$('#demo-upload').click();">
+
+					                        <div class="dropp-ftext" onclick="$('#demo-upload3').click();">
 					                            <strong class="gtext" style="font-size: 26px;">
-					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
+					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span>
 					                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
 					                                your images here!
 					                                </strong>
 					                            <br>
 					                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
 					                        </div>
-				                        
+
 				                    <!-- </div> -->
 								{!! Form::close() !!}
-					                     
+
 									<div class="row">
 				                        <div class="col-md-12 text-center">
 				                            <button onclick="$('#demo-upload3').submit()" class="btn-appointment">SUBMIT</button>
@@ -738,28 +742,76 @@
 
 	                        </div>
 							@if(Auth::user()->rol_id == 1)
-	                        <div role="tabpanel" class="tab-pane fade in active" id="imagenesTotal">
+              <div role="tabpanel" class="tab-pane fade in active" id="urgent">
+                  <!-- <div class="spacing">
+                      <img src="img/icon1.jpg" style="width: 15%; margin: auto;" class="img-responsive">
+                      <h2>Drop your images here!</h2>
+                  </div> -->
+    <div class="spacing" style="margin-top: 10px">
+      @if(isset($process))
+        <table id="example" class="table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+          <thead>
+            <tr role="row">
+              <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image
+              </th>
+              <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Name
+              </th>
+              <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 191.667px;">User Email</th>
+              <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 77.6667px;">Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($urgent as $value)
+            <tr role="row" class="odd">
+              <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+              <td>{{ $value->name }}</td>
+              <td>{{ $value->user->email }}</td>
+              <td>
+                <button type="button" class="btn btn-info btn-lg" onclick="changeStatus({{ $value->id }})">Change Status to Editing</button>
+                          <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+                         </td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      @endif
+                     </div>
+                 </div>
+
+
+	                        <div role="tabpanel" class="tab-pane fade in" id="imageesTotal">
 	                            <!-- <div class="spacing">
 	                                <img src="img/icon1.jpg" style="width: 15%; margin: auto;" class="img-responsive">
 	                                <h2>Drop your images here!</h2>
 	                            </div> -->
 								<div class="spacing" style="margin-top: 10px">
 									@if(isset($process))
-										@foreach($process as $value)
-	                                		<div class="col-md-12">
-		                                        <div class="col-md-7">
-		                                            <img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px">
-		                                        </div>
-		                                        <div class="col-md-5" style="padding-top: 40px">
-		                                            <strong>User Email: {{ $value->user->email }}<br></strong>
-		                                            <button type="button" class="btn btn-info btn-lg" onclick="changeStatus({{ $value->id }})">Change Status to Editing</button>
-		                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button><br>
-		                                        </div>
-		                                        </div>
-
-		                               
-	                                	@endforeach
-	                                @endif
+										<table id="example" class="table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image
+													</th>
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Name
+													</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 191.667px;">User Email</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 77.6667px;">Options</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($process as $value)
+												<tr role="row" class="odd">
+													<td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+													<td>{{ $value->name }}</td>
+													<td>{{ $value->user->email }}</td>
+													<td>
+														<button type="button" class="btn btn-info btn-lg" onclick="changeStatus({{ $value->id }})">Change Status to Editing</button>
+								                     	<button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+								                     </td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+									@endif
 	                               </div>
 		                         </div>
 
@@ -795,21 +847,36 @@
 	                                <h2>Drop your images here!</h2>
 	                            </div> -->
 								<div class="spacing" style="margin-top: 10px">
-									@if(isset($sendTotal))
-										@foreach($sendTotal as $value)
-	                                		<div class="col-md-12">
-		                                        <div class="col-md-7">
-		                                            <img src="{{ asset('user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px; max-width: 400px; max-height: 500px">
-		                                        </div>
-		                                        <div class="col-md-5" style="padding-top: 40px">
-		                                            <strong>User Email: {{ $value->imagen->user->email }}<br></strong>
-		                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button><br>
-		                                        </div>
-		                                        </div>
 
-		                               
-	                                	@endforeach
-	                                @endif
+										<table id="example" class="table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image Edited
+													</th>
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image Old
+													</th>
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Name
+													</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 191.667px;">User Email</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 77.6667px;">Options</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($sendTotal as $value)
+												<tr role="row" class="odd">
+													<td class="sorting_1"><img src="{{ asset('user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+													<td class="sorting_1"><img src="{{ asset('pedidos/'.$value->imagen->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+													<td>{{ $value->name }}</td>
+                          <td>{{ $value->user->email }}</td>
+													<td>
+			                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+								                     </td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+
+
 	                               </div>
 		                         </div>
 
@@ -820,29 +887,55 @@
 	                            </div> -->
 								<div class="spacing" style="margin-top: 10px">
 									@if(isset($editing))
-										@foreach($editing as $value)
-	                                		<div class="col-md-12">
+										<table id="example" class="table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image
+													</th>
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Name
+													</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 191.667px;">User Email</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 77.6667px;">Options</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($editing as $value)
+												<tr role="row" class="odd">
+													<td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+													<td>{{ $value->name }}</td>
+													<td>{{ $value->user->email }}</td>
+													<td>
+														 @if($value->status == 'editing')
+			                                            	<button type="button" class="btn btn-info btn-lg" onclick="upload({{ $value->id }})">Upload new Image</button>
+			                                            @endif
+			                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+								                     </td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+
+										<!-- @foreach($editing as $value) -->
+	                                		<!-- <div class="col-md-12">
 		                                        <div class="col-md-7">
 		                                            <img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px">
 		                                        </div>
 		                                        <div class="col-md-5" style="padding-top: 40px">
 		                                            <strong>User Email: {{ $value->user->email }}<br></strong>
-		                                            <strong>Status: {{ $value->send }}<br></strong>
-		                                            @if($value->status == 'editing')
-		                                            	<button type="button" class="btn btn-info btn-lg" onclick="upload({{ $value->id }})">Upload new Image</button>
-		                                            @endif
-		                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button><br>
+		                                            <strong>Status: {{ $value->send }}<br></strong> -->
+		                                            <!-- @if($value->status == 'editing') -->
+		                                            	<!-- <button type="button" class="btn btn-info btn-lg" onclick="upload({{ $value->id }})">Upload new Image</button> -->
+		                                            <!-- @endif -->
+		                                            <!-- <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button><br>
 		                                        </div>
-		                                        </div>
-
-		                               
-	                                	@endforeach
+		                                    </div> -->
+	                                	<!-- @endforeach -->
 	                                @endif
 	                               </div>
 		                         </div>
-		                        
+
 							<!-- Trigger the modal with a button -->
-								
+
 
 								<!-- Modal -->
 	                        <div id="myModal" class="modal fade" role="dialog">
@@ -875,29 +968,84 @@
 	                        <div role="tabpanel" class="tab-pane fade in" id="images">
 
 	                            <div class="row">
-	                            	@foreach($process as $key => $value)
-                                		<div class="col-sm-4">
+                                <br>
+	                            	<table id="example" class="table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image
+													</th>
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Name
+													</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 191.667px;">User Email</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 77.6667px;">Options</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($processUser as $value)
+												<tr role="row" class="odd">
+													<td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+													<td>{{ $value->name }}</td>
+													<td>{{ $value->user->email }}</td>
+													<td>
+			                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+								                     </td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+	                            	<!-- @foreach($process as $key => $value) -->
+
+                                		<!-- <div class="col-sm-4">
 		                                    <img src="{{ asset('pedidos/'.$value->name)}}" style="width: 100%; height: auto; padding: 20px;" alt="">
 		                                    <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
-		                                </div>
-                                	@endforeach
+		                                </div> -->
+                                	<!-- @endforeach -->
 	                            </div>
 
 	                        </div>
 
 	                        <div role="tabpanel" class="tab-pane fade in" id="imagesEdited">
 	                            <div class="row">
-	                            	@foreach($send as $key => $value)
-                                		<div class="col-sm-4">
+                                <br>
+	                            	<table id="example" class="table table-striped table-bordered dataTable no-footer" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image New
+													</th>
+                          <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Image Old
+													</th>
+													<th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 111.667px;">Name
+													</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 191.667px;">User Email</th>
+													<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 77.6667px;">Options</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($send as $value)
+												<tr role="row" class="odd">
+													<td class="sorting_1"><img src="{{ asset('user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                          <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->imagen->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+													<td>{{ $value->name }}</td>
+													<td>{{ $value->user->email }}</td>
+													<td>
+			                                            <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
+								                     </td>
+												</tr>
+												@endforeach
+											</tbody>
+										</table>
+	                            	<!-- @foreach($send as $key => $value) -->
+                                		<!-- <div class="col-sm-4">
 		                                    <img src="{{ asset('user/'.$value->name)}}" style="width: 100%; height: auto; padding: 20px;" alt="">
 		                                    <button class="btn-appointment"><a href='/download/{{$value->name}}' style="color:white">Download</a></button>
-		                                </div>
-                                	@endforeach
+		                                </div> -->
+                                	<!-- @endforeach -->
 	                            </div>
 	                        </div>
 
 	                        <div role="tabpanel" class="tab-pane fade in" id="cart">
 		                        <div class="row spacing">
+		                        	{!! Form::open(['route' => 'payment', 'method' => 'get']) !!}
 		                                <div class="col-md-6">
 		                                	@foreach($no_process as $key => $value)
 		                                		<div class="col-md-12">
@@ -906,10 +1054,13 @@
 			                                        </div>
 			                                        <div class="col-md-5" style="padding-top: 40px">
 			                                            <strong>Image {{ $key+1 }}<br>10$</strong>
+			                                            <br>
+			                                            <strong>Urgent: </strong><input type="checkbox" name="checked{{$value->id}}">
+                                                  <!-- <br><strong>Description: </strong><textarea name="description{{ $value->id }}" rows="8" cols="80"></textarea> -->
 			                                        </div>
 			                                    </div>
 		                                	@endforeach
-		                              {!! Form::open(['route' => 'payment', 'method' => 'get']) !!}
+
 										<div class="col-sm-12">
 											<div class="col-md-6 text-center">
 		                                        <label>Description: </label>
@@ -918,13 +1069,18 @@
 										</div>
 		                                <div class="col-sm-12">
 		                                    <div class="col-md-6 text-center">
-		                                        <div class="h4"><strong>TOTAL: {{ 10 * count($no_process) }}$</strong></div>
+		                                    @foreach($plan as $value)
+												@if($value->name == 'standar')
+		                                        	<div class="h4"><strong>TOTAL: {{ 10 * count($no_process) }}$</strong></div>
+		                                        @endif
+		                                        	<div class="h4"><strong>TOTAL: {{ 15 * count($no_process) }}$</strong></div>
+		                                     @endforeach
 		                                    </div>
 		                                    <div class="col-md-6 text-center">
 		                                        <button class="btn-appointment" type="submit">CHECKOUT</button>
 		                                    </div>
 		                                </div>
-		                                {{ Form::close() }}
+		                            {{ Form::close() }}
 		                            </div>
 		                        </div>
 		                    </div>
@@ -936,14 +1092,14 @@
 		                                    <h2 class="gtext bold">
 		                                        My Plan is: Standard Pricing
 		                                    </h2>
-		                                </div>		
+		                                </div>
 									@else
 
 										<div class="lbg hbox">
 		                                    <h2 class="gtext bold">
 		                                        My Plan is: Non-member
 		                                    </h2>
-		                                </div>	
+		                                </div>
 									@endif
 									<br><br>
 									<div class="container">
@@ -964,7 +1120,7 @@
 					                                    <button type="button" class="btn btn-info btn-lg" onclick="buyPlan({{ Auth::user()->id }})">Buy Plan</button>
 					                                    @endif
 					                                    <br>
-					                                    
+
 					                                </div>
 					                            </div>
 					                            <br>
@@ -993,14 +1149,14 @@
 	                        </div>
 	                    </div>
 	                </div>
-	                
-	                 
+
+
 	            </section>
 	        </div>
         @endif
 
         <!-- Trigger the modal with a button -->
-								
+
 
 			<!-- Modal -->
         <div id="modalPlan" class="modal fade" role="dialog">
@@ -1031,7 +1187,7 @@
 			        </select></p>
 			      </div>
 			      <div class="modal-footer">
-			      
+
 			      		<input type="hidden" id="idUserPlan" name="user">
 				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				        <button type="submit" class="btn btn-primary">Submit</button>
@@ -1044,7 +1200,7 @@
 
 
         <div id="view-meet" class="view">
-            
+
             <div class="slider">
                 <div class="img" id="meetbg" style="padding-top: 250px;">
                     <h1 class="white text-center">WHAT INSPIRES US</h1>
@@ -1076,12 +1232,12 @@
             </div>
 
                     <div class="row">
-                        
+
                         <div class="col-md-6 vtext dtext text-center">
                             <strong class="dtext" style="display: block;">JESSICA RATTAN <br>ON COMMUNITY INVOLVEMENT</strong>
                             <p>At The Body Shop, we consider it a privilege to get involved with many community activities, as we work alongside other community members invested in making a difference.</p>
                         </div>
-                        
+
                         <div class="col-md-6 vid" style="padding: 0;">
                             <!-- <div class="video-container"> -->
                                 <!-- <iframe src="https://drive.google.com/file/d/0B_ebHl4HpGxZRXExSmpOZzExTjQ/preview"></iframe> -->
@@ -1111,7 +1267,7 @@
                             <strong class="dtext" style="display: block;">JOHN &amp; TERRIE</strong>
                             <p>John has built a culture and business that is different from everybody else.  He has built this business and put a great team in place. We feel very fortunate that we have a business that provides for our family and the families of our employees. </p>
                         </div>
-                        
+
                         <div class="col-md-6 vid" style="padding: 0;">
                                 <iframe src="https://drive.google.com/file/d/0B_ebHl4HpGxZT1JVZlFaWVEwWXM/preview" class="video"></iframe>
                                 <!-- <iframe src="https://drive.google.com/file/d/0B_ebHl4HpGxZZkwzXzhmYnVyeDg/preview" class="video"></iframe> -->
@@ -1119,7 +1275,7 @@
                     </div>
 
 
-                    
+
             </div>
         </div>
 
@@ -1133,26 +1289,26 @@
                         </small>
                     </h1>
                     @if(Auth::user())
-                    	{!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload3', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
+                    	{!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload1', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
 				                    <!-- <div id="dropp"> -->
 				    					<input type="file" name="foto[]">
-				    					
-					                        <div class="dropp-ftext" onclick="$('#demo-upload').click();">
+
+					                        <div class="dropp-ftext" onclick="$('#demo-upload1').click();">
 					                            <strong class="gtext" style="font-size: 26px;">
-					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span> 
+					                                <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span>
 					                                <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
 					                                your images here!
 					                                </strong>
 					                            <br>
 					                            <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
 					                        </div>
-				                        
+
 				                    <!-- </div> -->
 								{!! Form::close() !!}
-					                     
+
 									<div class="row">
 				                        <div class="col-md-12 text-center">
-				                            <button onclick="$('#demo-upload3').submit()" class="btn-appointment">SUBMIT</button>
+				                            <button onclick="$('#demo-upload1').submit()" class="btn-appointment">SUBMIT</button>
 				                        </div>
 				                    </div>
 					@else
@@ -1162,7 +1318,7 @@
 		                        <div class="btn-appointment" data-ref="view-signin"  style="width: 50%; margin: 20px auto;">SIGN IN</div>
 		                    </h1>
 		                </section>
-					@endif           
+					@endif
                 </section>
 
             </div>
@@ -1201,7 +1357,7 @@
                             <i class="fa fa-linkedin"></i>
                         </h2>
                     </div>
-                    
+
                 </div>
             </div>
         </footer>
@@ -1221,13 +1377,13 @@
           <!-- <div class="dz-error-message"><span data-dz-errormessage></span></div> -->
         </div>
     </div>
-    
-     
-    <script src="js/bootstrap.min.js"></script> 
-    <script src="js/jquery-ui.min.js"></script> 
-    <script src="js/dropzone.js"></script> 
+
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/dropzone.js"></script>
     <script src="js/gsap/TweenMax.min.js"></script>
-    @yield('scripts')	
+    @yield('scripts')
     @if(Session::get('panel') == 1)
 	    <script>
 			$(document).ready(function(){
@@ -1283,7 +1439,7 @@
             })
         }, 6000);
 
-        
+
     </script>
 
 
@@ -1413,7 +1569,7 @@
             // console.log(target);
         });
 
-        
+
         $(".side-menu li a").click(function () {
             // $(".side-menu li:active").removeClass("active");
             // $(this).parent().addClass("active");
@@ -1479,7 +1635,7 @@
             if ($("#"+view).hasClass("no-logo")) { opt = 0; dplay = "none"; }
             else { opt = 1; dplay = "block"; };
 
-            
+
 
             tl2
             .staggerTo(".vimg", 0.2, {height: 0, margin: 0})
@@ -1524,7 +1680,7 @@
         var vid = video[0];
 
         $("#prime #play").on('click', function(e){
-            
+
             if (playing) {
                 vid.pause();
                 vid.stop();
@@ -1585,7 +1741,7 @@
 
     </script>
 
-    <script>		
+    <script>
 		function buyPlan(id)
 		{
 			$('#idUserPlan').val(id);
@@ -1615,22 +1771,22 @@
             uploadMultiple: true,
             maxFilezise: 10,
             maxFiles: 2,
-            
+
             init: function() {
                 var submitBtn = document.querySelector("#submit");
                 myDropzone = this;
-                
+
                 submitBtn.addEventListener("click", function(e){
                     e.preventDefault();
                     e.stopPropagation();
                     myDropzone.processQueue();
                 });
-                
+
                 this.on("complete", function(file) {
                     myDropzone.removeFile(file);
                 });
 
-                this.on("success", 
+                this.on("success",
                     myDropzone.processQueue.bind(myDropzone)
                 );
             }
@@ -1639,7 +1795,12 @@
 
     <script src="https://use.fontawesome.com/16f6b8af4b.js"></script>
     <!-- <script src="js/gsap/TimelineLite.min.js"></script> -->
-
+	<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$('#example').DataTable();
+			} );
+		</script>
     </body>
 
 </html>

@@ -43,13 +43,13 @@ class ImagesController extends Controller
     public function store(Request $request)
     {
         $files = $request->file('foto');
-        
+
         foreach($files as $file){
             $fileName = $file->getClientOriginalName();
-            
+
             $name = Carbon::now()->second.$fileName;
             \Storage::disk('local')->put($name, \File::get($file));
-            
+
             $imagen = new Imagenes;
             $imagen->name = $name;
             $imagen->status = 'no_process';
@@ -57,7 +57,7 @@ class ImagesController extends Controller
             $imagen->id_user = Auth::user()->id;
             $imagen->save();
         }
-        Session::flash('user-registered', true);
+        Session::flash('panel', 1);
         return Redirect::to('/');
     }
 
@@ -118,21 +118,22 @@ class ImagesController extends Controller
         $imagenes->status = 'editing';
         $imagenes->save();
 
-        Session::flash('user-registered', true);
+        Session::flash('panel', 1);
         return Redirect::to('/')->with('message', 'Change Status "Editing" Correctly');
     }
 
     public function uploadNewImage(Request $request)
     {
         $files = $request->file('foto');
-        
+
         foreach($files as $file){
             $fileName = $file->getClientOriginalName();
-            
+
             $name = Carbon::now()->second.$fileName;
-              
+
             $imagenes = Imagenes::find($request->img);
             $imagenes->send = 'yes';
+            $imagenes->status = 'completed';
             $imagenes->save();
 
             $imagen = new ImagenEditada;
@@ -143,7 +144,7 @@ class ImagesController extends Controller
 
             \Storage::disk('user')->put($name, \File::get($file));
         }
-        Session::flash('user-registered', true);
+        Session::flash('panel', 1);
         return Redirect::to('/')->with('message', 'Image Uploaded Correctly');;
     }
 }

@@ -57,13 +57,7 @@ class UserController extends Controller
             $plan->name = 'non-member';
             $plan->id_user = $user->id;
             $plan->save();
-
-            if(Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-            {
-                Session::flash('panel', 1);
-                return Redirect::to('/');
-            }
-
+            
             Session::flash('user-registered', true);
             return Redirect::to('/')->with('message', 'User Registred Exactly');
         }

@@ -13,11 +13,15 @@ class ImagenEditada extends Model
      * @var array
      */
     protected $fillable = [
-        'id','name', 'id_imagen'
+        'id','name', 'id_imagen', 'id_user'
     ];
 
     public function imagen()
     {
-        return $this->belongsTo('App\Imagenes');
+        return $this->belongsTo('App\Imagenes', 'id_imagen');
+    }
+
+    public function user(){
+        return $this->belongsTo('App\User', 'id_user');
     }
 }

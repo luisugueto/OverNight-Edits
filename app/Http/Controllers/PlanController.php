@@ -156,6 +156,7 @@ class PlanController extends Controller
         $token = \Request::get('token');
         //if (empty(\Request::get('PayerID')) || empty(\Request::get('token'))) {
         if (empty($payerId) || empty($token)) {
+            Session::flash('panel', 1);
             return \Redirect::to('/')
                 ->with('message', 'Hubo un problema al intentar pagar con Paypal');
         }
@@ -209,10 +210,12 @@ class PlanController extends Controller
             $plan->id_user = Auth::user()->id;
             $plan->final = $fecha->format('Y-m-d');
             $plan->save();
-
+            
+            Session::flash('panel', 1);
             \Session::forget('cantidad');
             return \Redirect::to('/')->with('message', 'Payment Registred. Your Plan is: Standar Pricing');
         }
+        Session::flash('panel', 1);
         return \Redirect::to('/')->with('message', 'Error!');
     }
 
