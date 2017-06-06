@@ -5,13 +5,21 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>OverNight Edits</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
+        <link href="css/drag-drop.css" rel="stylesheet">
 
         <link rel='shortcut icon' type='image/ico' href='favicon.ico' />
         <script src="js/jquery.min.js"></script>
+
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
+        <link rel="canonical" href="https://css-tricks.com/examples/DragAndDropFileUploading/">
+    	  <meta name="viewport" content="width=device-width,initial-scale=1" />
+    	  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400" />
+	      <!-- remove this if you use Modernizr -->
+	     <script>(function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>
     </head>
 
     <body>
@@ -171,29 +179,18 @@
 
 
                     @if(Auth::user())
-                        {!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload2', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
-                                    <!-- <div id="dropp"> -->
-                                        <input type="file" name="foto[]">
-
-                                            <div class="dropp-ftext" onclick="$('#demo-upload2').click();">
-                                                <strong class="gtext" style="font-size: 26px;">
-                                                    <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span>
-                                                    <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
-                                                    your images here!
-                                                    </strong>
-                                                <br>
-                                                <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
-                                            </div>
-
-                                    <!-- </div> -->
-                                {!! Form::close() !!}
-
-                                    <div class="row">
-                                        <div class="col-md-12 text-center">
-                                            <button onclick="$('#demo-upload2').submit()" class="btn-appointment">SUBMIT</button>
-                                            <br><br>
-                                        </div>
-                                    </div>
+                      {!! Form::open(['url' => '/uploadImages', 'method' => 'POST', 'files'=>'true', 'novalidate'=>'', 'class' => 'box', 'id'=>'upload_form']) !!}
+                          <div class="box__input">
+                            <svg class="box__icon" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"/></svg>
+                            <input type="file" style="display:none" name="files[]" id="file" class="box__file" data-multiple-caption="{count} files selected" multiple />
+                            <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+                            <button type="submit" class="box__button">Upload</button>
+                          </div>
+                          <div class="box__uploading">Uploading&hellip;</div>
+                          <div class="box__success">Done! <a href="{{ url('/') }}" class="box__restart" role="button">Upload more?</a></div>
+                          <div class="box__error">Error! <span></span>. <a href="{{ url('/') }}" class="box__restart" role="button">Try again!</a></div>
+                        {{ Form::close() }}
+                        <br>
                     @else
 
                         <!-- <section class="white-gradient text-center"> -->
@@ -711,34 +708,21 @@
                             @else
                                 <div role="tabpanel" class="tab-pane fade in" id="upload">
                             @endif
-                                <!-- <div class="spacing">
-                                    <img src="img/icon1.jpg" style="width: 15%; margin: auto;" class="img-responsive">
-                                    <h2>Drop your images here!</h2>
-                                </div> -->
                                 <div class="spacing" style="margin-top: 10px">
-                                {!! Form::open(['url' => '/upload-images', 'method' => 'POST', 'files'=>'true', 'id' => 'demo-upload3', 'class' => 'dropzone needsclick dz-clickable dz-started']) !!}
-                                    <!-- <div id="dropp"> -->
-                                        <input type="file" name="foto[]">
-
-                                            <div class="dropp-ftext" onclick="$('#demo-upload3').click();">
-                                                <strong class="gtext" style="font-size: 26px;">
-                                                    <span class="hidden-xs hidden-sm gtext bold" style="font-size: 26px;">Drop</span>
-                                                    <span class="visible-xs visible-sm gtext bold" style="font-size: 26px;">Upload</span>
-                                                    your images here!
-                                                    </strong>
-                                                <br>
-                                                <i class="fa fa-chevron-circle-down fa-2x" style="font-size: 80px;"></i>
-                                            </div>
-
-                                    <!-- </div> -->
-                                {!! Form::close() !!}
-
-                                    <div class="row">
-                                        <div class="col-md-12 text-center">
-                                            <button onclick="$('#demo-upload3').submit()" class="btn-appointment">SUBMIT</button>
-                                        </div>
-                                    </div>
-                                    <br>
+                                  <div class="col-sm-6" style="align: center">
+                                    {!! Form::open(['url' => '/uploadImages', 'method' => 'POST', 'files'=>'true', 'novalidate'=>'', 'class' => 'box', 'id'=>'upload_form']) !!}
+                                        <div class="box__input">
+                                    			<svg class="box__icon" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"/></svg>
+                                    			<input type="file" style="display:none" name="files[]" id="file" class="box__file" data-multiple-caption="{count} files selected" multiple />
+                                    			<label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+                                    			<button type="submit" class="box__button">Upload</button>
+                                    		</div>
+                                    		<div class="box__uploading">Uploading&hellip;</div>
+                                    		<div class="box__success">Done! <a href="{{ url('/') }}" class="box__restart" role="button">Upload more?</a></div>
+                                    		<div class="box__error">Error! <span></span>. <a href="{{ url('/') }}" class="box__restart" role="button">Try again!</a></div>
+                                    	{{ Form::close() }}
+                                      <br>
+                                  </div>
                                 </div>
 
                             </div>
@@ -1049,7 +1033,7 @@
                                     {!! Form::open(['route' => 'payment', 'method' => 'get']) !!}
                                         <div class="col-md-8">
                                             @foreach($no_process as $key => $value)
-                                                <div class="col-md-12">
+                                                <div class="col-md-12" id="addElement">
                                                     <div class="col-md-6">
                                                         <img src="{{ asset('local/public/pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px">
                                                     </div>
@@ -1061,11 +1045,10 @@
                                                             @endif
                                                                 15$</strong>
                                                          @endforeach
-                                                        
+
                                                         <br>
                                                         <small>24 Hour Turnaround ($) </small><input type="checkbox" name="checked{{$value->id}}">
                                                         <br><button class="btn-appointment"><a href='{{ url("/delete/$value->name/$value->id") }}' style="color:white">Delete Image</a></button>
-                                                  <!-- <br><strong>Description: </strong><textarea name="description{{ $value->id }}" rows="8" cols="80"></textarea> -->
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -1390,7 +1373,6 @@
 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
-    <script src="js/dropzone.js"></script>
     <script src="js/gsap/TweenMax.min.js"></script>
     @yield('scripts')
     @if(Session::get('panel') == 1)
@@ -1774,34 +1756,6 @@
         }
     </script>
 
-    <!-- <script>
-        Dropzone.options.myDropzone = {
-            autoProcessQueue: false,
-            uploadMultiple: true,
-            maxFilezise: 10,
-            maxFiles: 2,
-
-            init: function() {
-                var submitBtn = document.querySelector("#submit");
-                myDropzone = this;
-
-                submitBtn.addEventListener("click", function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.processQueue();
-                });
-
-                this.on("complete", function(file) {
-                    myDropzone.removeFile(file);
-                });
-
-                this.on("success",
-                    myDropzone.processQueue.bind(myDropzone)
-                );
-            }
-        };
-    </script> -->
-
     <script src="https://use.fontawesome.com/16f6b8af4b.js"></script>
     <!-- <script src="js/gsap/TimelineLite.min.js"></script> -->
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
@@ -1810,6 +1764,10 @@
                 $('#example').DataTable();
             } );
         </script>
+    <script type="text/javascript" src="js/drag-drop.js"></script>
+
+
+
     </body>
 
 </html>

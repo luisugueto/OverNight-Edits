@@ -14,6 +14,10 @@ use App\Plan;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['store']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -57,7 +61,7 @@ class UserController extends Controller
             $plan->name = 'non-member';
             $plan->id_user = $user->id;
             $plan->save();
-            
+
             Session::flash('user-registered', true);
             return Redirect::to('/')->with('message', 'User Registred Exactly');
         }

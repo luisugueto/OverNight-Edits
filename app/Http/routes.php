@@ -49,57 +49,65 @@ Route::get('/', function () {
 
 });
 
-Route::get('/download/{file}', array(
-	'as' => 'upload',
-	'uses' => 'ImagesController@downloadFile',
-));
-
-Route::get('/delete/{file}/{id}', array(
-	'as' => 'delete',
-	'uses' => 'ImagesController@deletedFile',
-));
-
-Route::post('/upload', array(
-	'as' => 'upload',
-	'uses' => 'PedidosController@noMember',
-));
-
-Route::post('/buyPlan', array(
-	'as' => 'buyPlan',
-	'uses' => 'PlanController@store',
-));
-
-Route::post('/changeStatusEditing', array(
-	'as' => 'changeStatusEditing',
-	'uses' => 'ImagesController@changeStatus',
-));
-
-Route::post('/uploadNewImage', 'ImagesController@uploadNewImage');
-Route::post('/upload-images', 'ImagesController@store');
-Route::post('/login', 'LoginController@store');
-Route::get('/logout', 'LoginController@destroy');
-
 Route::post('/register', 'UserController@store');
-
 Route::resource('user', 'UserController');
-Route::resource('images', 'ImagesController');
 Route::resource('login', 'LoginController');
-Route::resource('pedido', 'PedidosController');
+Route::post('/login', 'LoginController@store');
 
-// Paypal
-// Enviamos nuestro pedido a PayPal
-Route::get('payment', array(
-	'as' => 'payment',
-	'uses' => 'PedidosController@postPayment',
-));
-// Después de realizar el pago Paypal redirecciona a esta ruta
-Route::get('payment/statuss', array(
-	'as' => 'payment.statuss',
-	'uses' => 'PedidosController@getPaymentStatus',
-));
+Route::group(['middleware' => 'auth'], function () {
 
-// Después de realizar el pago Paypal redirecciona a esta ruta
-Route::get('payment/status', array(
-	'as' => 'payment.status2',
-	'uses' => 'PlanController@getPaymentStatus',
-));
+	Route::get('/download/{file}', array(
+		'as' => 'upload',
+		'uses' => 'ImagesController@downloadFile',
+	));
+
+	Route::get('/delete/{file}/{id}', array(
+		'as' => 'delete',
+		'uses' => 'ImagesController@deletedFile',
+	));
+
+	Route::post('/upload', array(
+		'as' => 'upload',
+		'uses' => 'PedidosController@noMember',
+	));
+
+	Route::post('/buyPlan', array(
+		'as' => 'buyPlan',
+		'uses' => 'PlanController@store',
+	));
+
+	Route::post('/changeStatusEditing', array(
+		'as' => 'changeStatusEditing',
+		'uses' => 'ImagesController@changeStatus',
+	));
+
+	Route::post('upload', ['as' => 'upload-post', 'uses' =>'ImagesController@postUpload']);
+	Route::post('upload/delete', ['as' => 'upload-remove', 'uses' =>'ImagesController@deleteUpload']);
+
+	Route::post('/uploadNewImage', 'ImagesController@uploadNewImage');
+	Route::post('/uploadImages', ['as' => 'upload-new', 'uses' =>'ImagesController@uploadImage']);
+
+	Route::get('/logout', 'LoginController@destroy');
+
+	Route::resource('images', 'ImagesController');
+
+	Route::resource('pedido', 'PedidosController');
+
+	// Paypal
+	// Enviamos nuestro pedido a PayPal
+	Route::get('payment', array(
+		'as' => 'payment',
+		'uses' => 'PedidosController@postPayment',
+	));
+	// Después de realizar el pago Paypal redirecciona a esta ruta
+	Route::get('payment/statuss', array(
+		'as' => 'payment.statuss',
+		'uses' => 'PedidosController@getPaymentStatus',
+	));
+
+	// Después de realizar el pago Paypal redirecciona a esta ruta
+	Route::get('payment/status', array(
+		'as' => 'payment.status2',
+		'uses' => 'PlanController@getPaymentStatus',
+	));
+});
