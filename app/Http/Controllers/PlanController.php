@@ -70,25 +70,25 @@ class PlanController extends Controller
         \Session::put('cantidad', $cantidad);
         $price = $cantidad * 10;
         $user = $request->user;
-        
+
         // create new Payer
         $payer = new Payer();
         $payer->setPaymentMethod('paypal');
         $items = array();
         $subtotal = 0;
 
-        
+
         $currency = 'USD';
 
         $item = new Item();
-        $item->setName('Plan Standar-Pricing')
+        $item->setName('Plan Standard')
             ->setCurrency($currency)
             ->setDescription('Buying plan by '+$cantidad+' month')
             ->setQuantity(1)
             ->setPrice($price);
             $items[] = $item;
             $subtotal += 1 * $price;
-        
+
 
         // add items at ItemList
         $item_list = new ItemList();
@@ -108,7 +108,7 @@ class PlanController extends Controller
         $transaction = new Transaction();
         $transaction->setAmount($amount)
             ->setItemList($item_list)
-            ->setDescription('Compra de Plan Standar');
+            ->setDescription('Compra de Plan Standard');
 
         $redirect_urls = new RedirectUrls();
         $redirect_urls->setReturnUrl(\URL::route('payment.status2'))
@@ -160,7 +160,7 @@ class PlanController extends Controller
             return \Redirect::to('/')
                 ->with('message', 'Hubo un problema al intentar pagar con Paypal');
         }
-        
+
         try {
             $payment = Payment::get($paymentId, $this->_api_context);
         } catch (Exception $ex) {
@@ -173,8 +173,8 @@ class PlanController extends Controller
             }
         }
 
-        // PaymentExecution object includes information necessary 
-        // to execute a PayPal account payment. 
+        // PaymentExecution object includes information necessary
+        // to execute a PayPal account payment.
         // The payer_id is added to the request query parameters
         // when the user is redirected from paypal back to your site
         try {
@@ -191,12 +191,12 @@ class PlanController extends Controller
                 die('Ups! Algo salió mal');
             }
         }
-        
+
         //echo '<pre>';print_r($result);echo '</pre>';exit; // DEBUG RESULT, remove it later
         if ($result->getState() == 'approved') { // payment made
             // Registrar el pedido --- ok
             // Registrar el Detalle del pedido  --- ok
-            // Eliminar carrito 
+            // Eliminar carrito
             // Enviar correo a user
             // Enviar correo a admin
             // Redireccionar
@@ -210,7 +210,7 @@ class PlanController extends Controller
             $plan->id_user = Auth::user()->id;
             $plan->final = $fecha->format('Y-m-d');
             $plan->save();
-            
+
             Session::flash('panel', 1);
             \Session::forget('cantidad');
             return \Redirect::to('/')->with('message', 'Payment Registred. Your Plan is: Standar Pricing');

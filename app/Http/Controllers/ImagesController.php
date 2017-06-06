@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Logic\Image\ImageRepository;
 use Illuminate\Support\Facades\Input;
-
 use App\Http\Requests;
 use App\Imagenes;
 use Redirect;
@@ -19,12 +17,6 @@ use Response;
 
 class ImagesController extends Controller
 {
-    protected $image;
-
-    public function __construct(ImageRepository $imageRepository)
-    {
-        $this->image = $imageRepository;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -51,34 +43,6 @@ class ImagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-     public function getUpload()
-    {
-        return view('pages.upload');
-    }
-
-    public function postUpload()
-    {
-        $photo = Input::all();
-        $response = $this->image->upload($photo);
-        return $response;
-
-    }
-
-    public function deleteUpload()
-    {
-
-        $filename = Input::get('id');
-
-        if(!$filename)
-        {
-            return 0;
-        }
-
-        $response = $this->image->delete( $filename );
-
-        return $response;
-    }
-
     public function uploadImage(Request $request){
 
         $files = $request['files'];
@@ -199,7 +163,7 @@ class ImagesController extends Controller
 
     public function deletedFile($file, $id){
 
-        Storage::delete($file);
+        Storage::delete(public_path().'/pedidos/'.$file);
 
         $imagenes = Imagenes::find($id);
         $imagenes->delete();

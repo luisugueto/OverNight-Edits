@@ -748,7 +748,7 @@
           <tbody>
             @foreach($urgent as $value)
             <tr role="row" class="odd">
-              <td class="sorting_1"><img src="{{ asset('local/public/pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+              <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
               <td>{{ $value->name }}</td>
               <td>{{ $value->user->email }}</td>
               <td>
@@ -785,7 +785,7 @@
                                             <tbody>
                                                 @foreach($process as $value)
                                                 <tr role="row" class="odd">
-                                                    <td class="sorting_1"><img src="{{ asset('local/public/pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                                                    <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
                                                     <td>{{ $value->name }}</td>
                                                     <td>{{ $value->user->email }}</td>
                                                     <td>
@@ -849,8 +849,8 @@
                                             <tbody>
                                                 @foreach($sendTotal as $value)
                                                 <tr role="row" class="odd">
-                                                    <td class="sorting_1"><img src="{{ asset('local/public/user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
-                                                    <td class="sorting_1"><img src="{{ asset('local/public/pedidos/'.$value->imagen->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                                                    <td class="sorting_1"><img src="{{ asset('user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                                                    <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->imagen->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
                                                     <td>{{ $value->name }}</td>
                           <td>{{ $value->user->email }}</td>
                                                     <td>
@@ -886,7 +886,7 @@
                                             <tbody>
                                                 @foreach($editing as $value)
                                                 <tr role="row" class="odd">
-                                                    <td class="sorting_1"><img src="{{ asset('local/public/pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                                                    <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
                                                     <td>{{ $value->name }}</td>
                                                     <td>{{ $value->user->email }}</td>
                                                     <td>
@@ -968,7 +968,7 @@
                                             <tbody>
                                                 @foreach($processUser as $value)
                                                 <tr role="row" class="odd">
-                                                    <td class="sorting_1"><img src="{{ asset('local/public/pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                                                    <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
                                                     <td>{{ $value->name }}</td>
                                                     <td>{{ $value->user->email }}</td>
                                                     <td>
@@ -1008,8 +1008,8 @@
                                             <tbody>
                                                 @foreach($send as $value)
                                                 <tr role="row" class="odd">
-                                                    <td class="sorting_1"><img src="{{ asset('local/public/user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
-                          <td class="sorting_1"><img src="{{ asset('local/public/pedidos/'.$value->imagen->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                                                    <td class="sorting_1"><img src="{{ asset('user/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
+                          <td class="sorting_1"><img src="{{ asset('pedidos/'.$value->imagen->name)}}" alt="" class="img-responsive" style="padding: 20px"></td>
                                                     <td>{{ $value->name }}</td>
                                                     <td>{{ $value->user->email }}</td>
                                                     <td>
@@ -1032,26 +1032,28 @@
                                 <div class="row spacing" >
                                     {!! Form::open(['route' => 'payment', 'method' => 'get']) !!}
                                         <div class="col-md-8">
-                                            @foreach($no_process as $key => $value)
-                                                <div class="col-md-12" id="addElement">
-                                                    <div class="col-md-6">
-                                                        <img src="{{ asset('local/public/pedidos/'.$value->name)}}" alt="" class="img-responsive" style="padding: 20px">
-                                                    </div>
-                                                    <div class="col-md-6" style="padding-top: 40px">
-                                                        <strong>Image {{ $key+1 }}<br>
-                                                        @foreach($plan as $value)
-                                                            @if($value->name == 'standar')
-                                                                10$</strong>
-                                                            @endif
-                                                                15$</strong>
-                                                         @endforeach
+                                          @foreach($no_process as $key => $val)
+                                          <div id="addElement">
+                                              <div class="col-md-12">
+                                                  <div class="col-md-6">
+                                                      <img src="{{ asset('pedidos/'.$val->name)}}" alt="" class="img-responsive" style="padding: 20px">
+                                                  </div>
+                                                  <div class="col-md-6" style="padding-top: 40px">
+                                                      <strong>Image {{ $key+1 }}<br>
+                                                      @foreach($plan as $value)
+                                                          @if($value->name == 'standar')
+                                                              10$</strong>
+                                                          @endif
+                                                              15$</strong>
+                                                       @endforeach
 
-                                                        <br>
-                                                        <small>24 Hour Turnaround ($) </small><input type="checkbox" name="checked{{$value->id}}">
-                                                        <br><button class="btn-appointment"><a href='{{ url("/delete/$value->name/$value->id") }}' style="color:white">Delete Image</a></button>
-                                                    </div>
-                                                </div>
-                                            @endforeach
+                                                      <br>
+                                                      <small>24 Hour Turnaround ($) </small><input type="checkbox" name="checked{{$value->id}}">
+                                                      <br><button class="btn-appointment"><a href='{{ url("/delete/$val->name/$val->id") }}' style="color:white">Delete Image</a></button>
+                                                  </div>
+                                              </div>
+                                            </div>
+                                          @endforeach
 
                                         <div class="col-sm-12">
                                             <div class="col-md-6 text-center">
@@ -1063,9 +1065,9 @@
                                             <div class="col-md-6 text-center">
                                             @foreach($plan as $value)
                                                 @if($value->name == 'standar')
-                                                    <div class="h4"><strong>TOTAL: {{ 10 * count($no_process) }}$</strong></div>
+                                                    <div class="h4"><strong>TOTAL: <strong id="totalCheckout" value="{{ 10 * count($no_process) }}">{{ 10 * count($no_process) }}</strong>$</strong></div>
                                                 @endif
-                                                    <div class="h4"><strong>TOTAL: {{ 15 * count($no_process) }}$</strong></div>
+                                                    <div class="h4"><strong>TOTAL: <strong  id="totalCheckout" value="{{ 15 * count($no_process) }}">{{ 15 * count($no_process) }}</strong>$</strong></div>
                                              @endforeach
                                             </div>
                                             <div class="col-md-6 text-center">
@@ -1764,7 +1766,251 @@
                 $('#example').DataTable();
             } );
         </script>
-    <script type="text/javascript" src="js/drag-drop.js"></script>
+    <!-- <script type="text/javascript" src="js/drag-drop.js"></script> -->
+    @if(Auth::user())
+    <script type="text/javascript">
+
+    'use strict';
+
+    ;( function ( document, window, index )
+    {
+      // feature detection for drag&drop upload
+      var isAdvancedUpload = function()
+        {
+          var div = document.createElement( 'div' );
+          return ( ( 'draggable' in div ) || ( 'ondragstart' in div && 'ondrop' in div ) ) && 'FormData' in window && 'FileReader' in window;
+        }();
+
+
+      // applying the effect for every form
+      var forms = document.querySelectorAll( '.box' );
+      Array.prototype.forEach.call( forms, function( form )
+      {
+        var input		 = form.querySelector( 'input[type="file"]' ),
+          label		 = form.querySelector( 'label' ),
+          errorMsg	 = form.querySelector( '.box__error span' ),
+          restart		 = form.querySelectorAll( '.box__restart' ),
+          droppedFiles = false,
+          showFiles	 = function( files )
+          {
+            label.textContent = files.length > 1 ? ( input.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', files.length ) : files[ 0 ].name;
+          },
+          triggerFormSubmit = function()
+          {
+            var event = document.createEvent( 'HTMLEvents' );
+            event.initEvent( 'submit', true, false );
+            form.dispatchEvent( event );
+          };
+
+        // letting the server side to know we are going to make an Ajax request
+        var ajaxFlag = document.createElement( 'input' );
+        ajaxFlag.setAttribute( 'type', 'hidden' );
+        ajaxFlag.setAttribute( 'name', 'ajax' );
+        ajaxFlag.setAttribute( 'value', 1 );
+        form.appendChild( ajaxFlag );
+
+        // automatically submit the form on file select
+        input.addEventListener( 'change', function( e )
+        {
+          showFiles( e.target.files );
+
+
+          triggerFormSubmit();
+
+
+        });
+
+        // drag&drop files if the feature is available
+        if( isAdvancedUpload )
+        {
+          form.classList.add( 'has-advanced-upload' ); // letting the CSS part to know drag&drop is supported by the browser
+
+          [ 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop' ].forEach( function( event )
+          {
+            form.addEventListener( event, function( e )
+            {
+              // preventing the unwanted behaviours
+              e.preventDefault();
+              e.stopPropagation();
+            });
+          });
+          [ 'dragover', 'dragenter' ].forEach( function( event )
+          {
+            form.addEventListener( event, function()
+            {
+              form.classList.add( 'is-dragover' );
+            });
+          });
+          [ 'dragleave', 'dragend', 'drop' ].forEach( function( event )
+          {
+            form.addEventListener( event, function()
+            {
+              form.classList.remove( 'is-dragover' );
+            });
+          });
+          form.addEventListener( 'drop', function( e )
+          {
+            droppedFiles = e.dataTransfer.files; // the files that were dropped
+            showFiles( droppedFiles );
+
+
+            triggerFormSubmit();
+
+                    });
+        }
+
+
+        // if the form was submitted
+        form.addEventListener( 'submit', function( e )
+        {
+          // preventing the duplicate submissions if the current one is in progress
+          if( form.classList.contains( 'is-uploading' ) ) return false;
+
+          form.classList.add( 'is-uploading' );
+          form.classList.remove( 'is-error' );
+
+          if( isAdvancedUpload ) // ajax file upload for modern browsers
+          {
+            e.preventDefault();
+
+            // gathering the form data
+            var ajaxData = new FormData( form );
+            if( droppedFiles )
+            {
+              Array.prototype.forEach.call( droppedFiles, function( file )
+              {
+                ajaxData['file'] = file ;
+              });
+            }
+
+            var formData = new FormData(this);
+
+
+            $.ajax({
+              type: "POST",
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              url: '{{ url("/uploadImages") }}',
+
+              data:new FormData($("#upload_form")[0]),
+              dataType:'json',
+        async:false,
+
+        processData: false,
+        contentType: false,
+              success: function( msg ) {
+                form.classList.remove( 'is-uploading' );
+                if(msg.status == true){
+                  var data = msg;
+                  var dataName = data.file.name;
+                  var asset = "pedidos/"+dataName;
+
+                  var pp = '<div class="col-md-12"><div class="col-md-6"><img src="'+asset+'" alt="" class="img-responsive" style="padding: 20px"></div><div class="col-md-6" style="padding-top: 40px"><strong>Image New<br>';
+                  @foreach($plan as $value)
+                       @if($value->name == 'standar')
+                          var value = parseInt(10);
+                          var total = parseInt($('#totalCheckout').html());
+                          $('#totalCheckout').val(parseInt(value+total));
+                          $('#totalCheckout').html(parseInt(value+total));
+                          pp+='10$</strong>';
+                      @endif
+                          var value = parseInt(15);
+                          var total = parseInt($('#totalCheckout').html());
+                          $('#totalCheckout').val(parseInt(value+total));
+                          $('#totalCheckout').html(parseInt(value+total));
+                          pp+='15$</strong>';
+                  @endforeach
+
+                  pp+='<br>';
+                  pp+='<small>24 Hour Turnaround ($) </small><input type="checkbox" name="checked'+data.file.id+'">';
+                  pp+='<br><button class="btn-appointment"><a href="/delete/'+data.file.name+'/'+data.file.id+'" style="color:white">Delete Image</a></button>';
+                  pp+='</div></div>';
+
+                  $('#addElement').append(pp);
+                  alert('Upload Image successfully');
+                  form.classList.add( data.success == true ? 'is-success' : 'is-error' );
+                  if(!data.success) errorMsg.textContent = 'Error';
+                }else  alert( 'Error. Please, try again!' );
+
+              },
+              error: function(data){
+                form.classList.remove( 'is-uploading' );
+                  alert( 'Error. Please, try again!' );
+              }
+          });
+
+            // ajax request
+            // var ajax = new XMLHttpRequest();
+            // ajax.open( form.getAttribute( 'method' ), form.getAttribute( 'action' ), true );
+            //
+            // ajax.onload = function()
+            // {
+            // 	form.classList.remove( 'is-uploading' );
+            // 	if( ajax.status >= 200 && ajax.status < 400 )
+            // 	{
+            // 		var data = JSON.parse( ajax.responseText );
+            // 		form.classList.add( data.success == true ? 'is-success' : 'is-error' );
+            // 		if( !data.success ) errorMsg.textContent = data.error;
+            // 	}
+            // 	else alert( 'Error. Please, contact the webmaster!' );
+            // };
+            //
+            // ajax.onerror = function()
+            // {
+            // 	form.classList.remove( 'is-uploading' );
+            // 	alert( 'Error. Please, try again!' );
+            // };
+            //
+            // ajax.send( ajaxData );
+          }
+          else // fallback Ajax solution upload for older browsers
+          {
+            var iframeName	= 'uploadiframe' + new Date().getTime(),
+              iframe		= document.createElement( 'iframe' );
+
+              $iframe		= $( '<iframe name="' + iframeName + '" style="display: none;"></iframe>' );
+
+            iframe.setAttribute( 'name', iframeName );
+            iframe.style.display = 'none';
+
+            document.body.appendChild( iframe );
+            form.setAttribute( 'target', iframeName );
+
+            iframe.addEventListener( 'load', function()
+            {
+              var data = JSON.parse( iframe.contentDocument.body.innerHTML );
+              form.classList.remove( 'is-uploading' )
+              form.classList.add( data.success == true ? 'is-success' : 'is-error' )
+              form.removeAttribute( 'target' );
+              if( !data.success ) errorMsg.textContent = data.error;
+              iframe.parentNode.removeChild( iframe );
+            });
+          }
+        });
+
+
+        // restart the form if has a state of error/success
+        Array.prototype.forEach.call( restart, function( entry )
+        {
+          entry.addEventListener( 'click', function( e )
+          {
+            e.preventDefault();
+            form.classList.remove( 'is-error', 'is-success' );
+            input.click();
+          });
+        });
+
+        // Firefox focus bug fix for file input
+        input.addEventListener( 'focus', function(){ input.classList.add( 'has-focus' ); });
+        input.addEventListener( 'blur', function(){ input.classList.remove( 'has-focus' ); });
+
+      });
+    }( document, window, 0 ));
+
+
+    </script>
+    @endif
 
 
 
